@@ -84,7 +84,7 @@ void SDAVisualizerApp::setUIVisibility(bool visible)
 }
 void SDAVisualizerApp::fileDrop(FileDropEvent event)
 {
-	
+	mSDASession->fileDrop(event);
 }
 void SDAVisualizerApp::update()
 {
