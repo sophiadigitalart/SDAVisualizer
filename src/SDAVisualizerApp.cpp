@@ -88,8 +88,11 @@ void SDAVisualizerApp::fileDrop(FileDropEvent event)
 }
 void SDAVisualizerApp::update()
 {
-	mSDASession->setFloatUniformValueByIndex(mSDASettings->IFPS, getAverageFps());
-	mSDASession->update();
+	if (mFadeInDelay == false) {
+		mSDASession->setFloatUniformValueByIndex(mSDASettings->IFPS, getAverageFps());
+		mSDASession->update();
+
+	}
 }
 void SDAVisualizerApp::cleanup()
 {
