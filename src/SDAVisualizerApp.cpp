@@ -55,18 +55,17 @@ SDAVisualizerApp::SDAVisualizerApp()
 	mSDASettings = SDASettings::create();
 	// Session
 	mSDASession = SDASession::create(mSDASettings);
-	//mSDASettings->mCursorVisible = true;
-	setUIVisibility(mSDASettings->mCursorVisible);
 	mSDASession->getWindowsResolution();
 
 	mFadeInDelay = true;
 	// windows
 	mIsShutDown = false;
-	mRenderWindowTimer = 0.0f;
-	timeline().apply(&mRenderWindowTimer, 1.0f, 2.0f).finishFn([&] { positionRenderWindow(); });
+	//mRenderWindowTimer = 0.0f;
+	//timeline().apply(&mRenderWindowTimer, 1.0f, 2.0f).finishFn([&] { positionRenderWindow(); });
 
 }
 void SDAVisualizerApp::positionRenderWindow() {
+	setUIVisibility(mSDASettings->mCursorVisible);
 	mSDASettings->mRenderPosXY = ivec2(mSDASettings->mRenderX, mSDASettings->mRenderY);//20141214 was 0
 	setWindowPos(mSDASettings->mRenderX, mSDASettings->mRenderY);
 	setWindowSize(mSDASettings->mRenderWidth, mSDASettings->mRenderHeight);
@@ -91,7 +90,6 @@ void SDAVisualizerApp::update()
 	if (mFadeInDelay == false) {
 		mSDASession->setFloatUniformValueByIndex(mSDASettings->IFPS, getAverageFps());
 		mSDASession->update();
-
 	}
 }
 void SDAVisualizerApp::cleanup()
@@ -140,6 +138,10 @@ void SDAVisualizerApp::keyDown(KeyEvent event)
 {
 	if (!mSDASession->handleKeyDown(event)) {
 		switch (event.getCode()) {
+		case KeyEvent::KEY_KP_PLUS:
+		case KeyEvent::KEY_DOLLAR:
+		case KeyEvent::KEY_TAB:
+			positionRenderWindow();
 		case KeyEvent::KEY_ESCAPE:
 			// quit the application
 			quit();
@@ -195,7 +197,7 @@ void SDAVisualizerApp::draw()
 
 void prepareSettings(App::Settings *settings)
 {
-	settings->setWindowSize(640, 480);
+	settings->setWindowSize(320, 240);
 }
 
 CINDER_APP(SDAVisualizerApp, RendererGl, prepareSettings)
