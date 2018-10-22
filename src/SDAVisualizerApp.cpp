@@ -179,18 +179,21 @@ void SDAVisualizerApp::draw()
 	if (tex) {
 		// Otherwise draw the texture and fill the screen
 		gl::draw(tex, getWindowBounds());
-
-		// Show the user what it is receiving
-		gl::ScopedBlendAlpha alpha;
-		gl::enableAlphaBlending();
-		gl::drawString("Receiving from: " + mSpoutIn.getSenderName(), vec2(toPixels(20), toPixels(20)), Color(1, 1, 1), Font("Verdana", toPixels(24)));
-		gl::drawString("fps: " + std::to_string((int)getAverageFps()), vec2(getWindowWidth() - toPixels(100), toPixels(20)), Color(1, 1, 1), Font("Verdana", toPixels(24)));
-		gl::drawString("RH click to select a sender", vec2(toPixels(20), getWindowHeight() - toPixels(40)), Color(1, 1, 1), Font("Verdana", toPixels(24)));
+		if (mSDASettings->mCursorVisible) {
+			// Show the user what it is receiving
+			gl::ScopedBlendAlpha alpha;
+			gl::enableAlphaBlending();
+			gl::drawString("Receiving from: " + mSpoutIn.getSenderName(), vec2(toPixels(20), toPixels(20)), Color(1, 1, 1), Font("Verdana", toPixels(24)));
+			gl::drawString("fps: " + std::to_string((int)getAverageFps()), vec2(getWindowWidth() - toPixels(100), toPixels(20)), Color(1, 1, 1), Font("Verdana", toPixels(24)));
+			gl::drawString("RH click to select a sender", vec2(toPixels(20), getWindowHeight() - toPixels(40)), Color(1, 1, 1), Font("Verdana", toPixels(24)));
+		}
 	}
 	else {
-		gl::ScopedBlendAlpha alpha;
-		gl::enableAlphaBlending();
-		gl::drawString("No sender/texture detected", vec2(toPixels(20), toPixels(20)), Color(1, 1, 1), Font("Verdana", toPixels(24)));
+		if (mSDASettings->mCursorVisible) {
+			gl::ScopedBlendAlpha alpha;
+			gl::enableAlphaBlending();
+			gl::drawString("No sender/texture detected", vec2(toPixels(20), toPixels(20)), Color(1, 1, 1), Font("Verdana", toPixels(24)));
+		}
 	}
 	getWindow()->setTitle(mSDASettings->sFps + " fps SDA");
 }
