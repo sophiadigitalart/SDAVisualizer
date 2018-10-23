@@ -142,6 +142,7 @@ void SDAVisualizerApp::keyDown(KeyEvent event)
 		case KeyEvent::KEY_DOLLAR:
 		case KeyEvent::KEY_TAB:
 			positionRenderWindow();
+			break;
 		case KeyEvent::KEY_ESCAPE:
 			// quit the application
 			quit();
