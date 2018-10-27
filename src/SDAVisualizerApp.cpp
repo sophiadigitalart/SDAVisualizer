@@ -62,7 +62,7 @@ SDAVisualizerApp::SDAVisualizerApp()
 	mIsShutDown = false;
 	//mRenderWindowTimer = 0.0f;
 	//timeline().apply(&mRenderWindowTimer, 1.0f, 2.0f).finishFn([&] { positionRenderWindow(); });
-
+	//positionRenderWindow();
 }
 void SDAVisualizerApp::positionRenderWindow() {
 	setUIVisibility(mSDASettings->mCursorVisible);
@@ -141,6 +141,7 @@ void SDAVisualizerApp::keyDown(KeyEvent event)
 		case KeyEvent::KEY_KP_PLUS:
 		case KeyEvent::KEY_DOLLAR:
 		case KeyEvent::KEY_TAB:
+		case KeyEvent::KEY_f:
 			positionRenderWindow();
 			break;
 		case KeyEvent::KEY_ESCAPE:
@@ -190,11 +191,11 @@ void SDAVisualizerApp::draw()
 		}
 	}
 	else {
-		if (mSDASettings->mCursorVisible) {
+		/*if (mSDASettings->mCursorVisible) {
 			gl::ScopedBlendAlpha alpha;
 			gl::enableAlphaBlending();
 			gl::drawString("No sender/texture detected", vec2(toPixels(20), toPixels(20)), Color(1, 1, 1), Font("Verdana", toPixels(24)));
-		}
+		}*/
 	}
 	getWindow()->setTitle(mSDASettings->sFps + " fps SDA");
 }
