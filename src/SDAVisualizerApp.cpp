@@ -41,6 +41,7 @@ private:
 	SDALogRef						mSDALog;
 	// Spout
 	SpoutIn							mSpoutIn;
+	gl::Texture2dRef				mSpoutTexture;
 	// fbo
 	bool							mIsShutDown;
 	Anim<float>						mRenderWindowTimer;
@@ -48,8 +49,13 @@ private:
 	bool							mFadeInDelay;
 	bool							mFlipV;
 	bool							mFlipH;
-	void							renderSceneToFbo();
+	//! fbos
+	void							renderToFbo();
 	gl::FboRef						mFbo;
+	//! shaders
+	gl::GlslProgRef					mGlsl;
+	bool							mUseShader;
+
 };
 
 
@@ -70,6 +76,9 @@ SDAVisualizerApp::SDAVisualizerApp()
 	gl::Fbo::Format format;
 	//format.setSamples( 4 ); // uncomment this to enable 4x antialiasing
 	mFbo = gl::Fbo::create(getWindowWidth(), getWindowHeight(), format.depthTexture());
+	// shader
+	mUseShader = true;
+	mGlsl = gl::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("passthrough.vs")).fragment(loadAsset("post.glsl")));
 
 	gl::enableDepthRead();
 	gl::enableDepthWrite();
@@ -84,23 +93,33 @@ void SDAVisualizerApp::positionRenderWindow() {
 	setWindowSize(mSDASettings->mRenderWidth, mSDASettings->mRenderHeight);
 }
 // Render into the FBO
-void SDAVisualizerApp::renderSceneToFbo()
+void SDAVisualizerApp::renderToFbo()
 {
-	// this will restore the old framebuffer binding when we leave this function
-	// on non-OpenGL ES platforms, you can just call mFbo->unbindFramebuffer() at the end of the function
-	// but this will restore the "screen" FBO on OpenGL ES, and does the right thing on both platforms
-	gl::ScopedFramebuffer fbScp(mFbo);
-	// clear out the FBO with black
-	gl::clear(Color::black());
+	if (mSpoutTexture) {
+		// this will restore the old framebuffer binding when we leave this function
+		// on non-OpenGL ES platforms, you can just call mFbo->unbindFramebuffer() at the end of the function
+		// but this will restore the "screen" FBO on OpenGL ES, and does the right thing on both platforms
+		gl::ScopedFramebuffer fbScp(mFbo);
+		// clear out the FBO with black
+		gl::clear(Color::black());
 
-	// setup the viewport to match the dimensions of the FBO
-	gl::ScopedViewport scpVp(ivec2(0), mFbo->getSize());
+		// setup the viewport to match the dimensions of the FBO
+		gl::ScopedViewport scpVp(ivec2(0), mFbo->getSize());
 
-	// render the color cube
-	gl::ScopedGlslProg shaderScp(gl::getStockShader(gl::ShaderDef().color()));
-	gl::color(Color(1.0f, 0.5f, 0.25f));
-	gl::drawColorCube(vec3(0), vec3(2.2f));
-	gl::color(Color::white());
+		// render
+
+		// texture binding must be before ScopedGlslProg
+		mSpoutTexture->bind(0);
+
+		gl::ScopedGlslProg prog(mGlsl);
+
+		mGlsl->uniform("iGlobalTime", (float)getElapsedSeconds());
+		mGlsl->uniform("iResolution", vec3(getWindowWidth(), getWindowHeight(), 1.0));
+
+		mGlsl->uniform("iChannel0", 0); // texture 0
+
+		gl::drawSolidRect(getWindowBounds());
+	}
 }
 void SDAVisualizerApp::setUIVisibility(bool visible)
 {
@@ -123,7 +142,9 @@ void SDAVisualizerApp::update()
 		mSDASession->setFloatUniformValueByIndex(mSDASettings->IFPS, getAverageFps());
 		mSDASession->update();
 		// render into our FBO
-		renderSceneToFbo();
+		if (mUseShader) {
+			renderToFbo();
+		}
 	}
 }
 void SDAVisualizerApp::cleanup()
@@ -178,6 +199,9 @@ void SDAVisualizerApp::keyDown(KeyEvent event)
 		case KeyEvent::KEY_f:
 			positionRenderWindow();
 			break;
+		case KeyEvent::KEY_s:
+			mUseShader = !mUseShader;
+			break;
 		case KeyEvent::KEY_v:
 			mFlipV = !mFlipV;
 			break;
@@ -214,24 +238,9 @@ void SDAVisualizerApp::draw()
 		}
 	}
 
-	//gl::draw(mSDASession->getMixTexture(), getWindowBounds());
-		// setup our camera to render the cube
-	CameraPersp cam(getWindowWidth(), getWindowHeight(), 60.0f);
-	cam.setPerspective(60, getWindowAspectRatio(), 1, 1000);
-	cam.lookAt(vec3(2.6f, 1.6f, -2.6f), vec3(0));
-	gl::setMatrices(cam);
-	// use the scene we rendered into the FBO as a texture
-	mFbo->bindTexture();
-
-	//// draw a cube textured with the FBO
-	//{
-	//	gl::ScopedGlslProg shaderScp(gl::getStockShader(gl::ShaderDef().texture()));
-	//	gl::drawCube(vec3(0), vec3(2.2f));
-	//}
-
 	gl::setMatricesWindow(toPixels(getWindowSize()));
-	auto tex = mSpoutIn.receiveTexture();
-	if (tex) {
+	mSpoutTexture = mSpoutIn.receiveTexture();
+	if (mSpoutTexture) {
 		// use the scene we rendered into the FBO as a texture
 		//tex->bind();
 
@@ -250,13 +259,22 @@ void SDAVisualizerApp::draw()
 		Rectf rectangle = Rectf(xLeft, yLeft, xRight, yRight);
 		// Otherwise draw the texture and fill the screen
 		if (mSDASettings->mCursorVisible) {
-			// show the FBO color texture in the upper left corner
-			gl::draw(mFbo->getColorTexture(), Rectf(0, 0, 128, 128));
-			// and draw the depth texture adjacent
-			gl::draw(mFbo->getDepthTexture(), Rectf(128, 0, 256, 128));
-			gl::draw(tex, Rectf(256, 0, 384, 128));
-			gl::draw(tex, Rectf(512, 0, 384, 128));
-			gl::draw(tex, Rectf(512, 128, 640, 0));
+			// original
+			gl::drawString("Original", vec2(toPixels(0), toPixels(140)), Color(1, 1, 1), Font("Verdana", toPixels(16)));
+			gl::draw(mSpoutTexture, Rectf(0, 0, 128, 128));
+			// flipH
+			gl::drawString("FlipH", vec2(toPixels(128), toPixels(140)), Color(1, 1, 1), Font("Verdana", toPixels(16)));
+			gl::draw(mSpoutTexture, Rectf(256, 0, 128, 128));
+			// flipV
+			gl::drawString("FlipV", vec2(toPixels(256), toPixels(140)), Color(1, 1, 1), Font("Verdana", toPixels(16)));
+			gl::draw(mSpoutTexture, Rectf(256, 128, 384, 0));
+
+			if (mUseShader) {
+				gl::drawString("Shader", vec2(toPixels(384), toPixels(140)), Color(1, 1, 1), Font("Verdana", toPixels(16)));
+				// show the FBO color texture 
+				gl::draw(mFbo->getColorTexture(), Rectf(384, 0, 512, 128));
+			
+			}
 			// Show the user what it is receiving
 			gl::ScopedBlendAlpha alpha;
 			gl::enableAlphaBlending();
@@ -265,7 +283,12 @@ void SDAVisualizerApp::draw()
 			gl::drawString("RH click to select a sender", vec2(toPixels(20), getWindowHeight() - toPixels(60)), Color(1, 1, 1), Font("Verdana", toPixels(24)));
 		}
 		else {
-			gl::draw(tex, rectangle);
+			if (mUseShader) {
+				gl::draw(mFbo->getColorTexture(), rectangle);
+			}
+			else {
+				gl::draw(mSpoutTexture, rectangle);
+			}
 		}
 	}
 	else {

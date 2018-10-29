@@ -204,8 +204,13 @@
   <ItemGroup>
     <ResourceCompile Include="Resources.rc" />
   </ItemGroup>
-  <ItemGroup />
-  <ItemGroup />
+  <ItemGroup>
+    <Xml Include="Debug\SDASettings.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\assets\passthrough.vs" />
+    <None Include="..\assets\post.glsl" />
+  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h" />
     <ClInclude Include="..\..\..\Cinder\blocks\Cinder-MIDI2\include\MidiConstants.h" />

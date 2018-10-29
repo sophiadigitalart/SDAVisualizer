@@ -42,6 +42,15 @@
     <Filter Include="Blocks\Cinder-WebSocketPP\src">
       <UniqueIdentifier>{72DEF7FC-E5DC-4EE6-AFA0-1F89CEFF9CFF}</UniqueIdentifier>
     </Filter>
+    <Filter Include="debug">
+      <UniqueIdentifier>{b5ac8f1f-e3ec-4e72-8b51-2452b8b3bef7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="release">
+      <UniqueIdentifier>{c5668988-11a2-4ebc-98e6-6632e1d10246}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets">
+      <UniqueIdentifier>{4868002f-b22a-4e58-8511-21af2629544d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\SDAVisualizerApp.cpp">
@@ -198,5 +207,18 @@
     <ResourceCompile Include="Resources.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="Debug\SDASettings.xml">
+      <Filter>debug</Filter>
+    </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\assets\passthrough.vs">
+      <Filter>assets</Filter>
+    </None>
+    <None Include="..\assets\post.glsl">
+      <Filter>assets</Filter>
+    </None>
   </ItemGroup>
 </Project>
