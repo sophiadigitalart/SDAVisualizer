@@ -115,8 +115,10 @@ void SDAVisualizerApp::renderToFbo()
 
 		mGlsl->uniform("iGlobalTime", (float)getElapsedSeconds());
 		mGlsl->uniform("iResolution", vec3(getWindowWidth(), getWindowHeight(), 1.0));
-
 		mGlsl->uniform("iChannel0", 0); // texture 0
+		mGlsl->uniform("iExposure", 1.0f);
+		mGlsl->uniform("iSobel", 1.0f);
+		mGlsl->uniform("iChromatic", 1.0f);
 
 		gl::drawSolidRect(getWindowBounds());
 	}
