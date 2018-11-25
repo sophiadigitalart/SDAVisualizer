@@ -49,6 +49,8 @@ private:
 	bool							mFadeInDelay;
 	bool							mFlipV;
 	bool							mFlipH;
+	int								xLeft, xRight, yLeft, yRight;
+	int								margin, tWidth, tHeight;
 	//! fbos
 	void							renderToFbo();
 	gl::FboRef						mFbo;
@@ -70,12 +72,19 @@ SDAVisualizerApp::SDAVisualizerApp()
 	mFadeInDelay = true;
 	mFlipV = false;
 	mFlipH = true;
+	xLeft = 0;
+	xRight = mSDASettings->mRenderWidth;
+	yLeft = 0;
+	yRight = mSDASettings->mRenderHeight;
+	margin = 20;
+	tWidth = mSDASettings->mFboWidth / 2;
+	tHeight = mSDASettings->mFboHeight / 2;
 	// windows
 	mIsShutDown = false;
 	// fbo
 	gl::Fbo::Format format;
 	//format.setSamples( 4 ); // uncomment this to enable 4x antialiasing
-	mFbo = gl::Fbo::create(getWindowWidth(), getWindowHeight(), format.depthTexture());
+	mFbo = gl::Fbo::create(mSDASettings->mRenderWidth, mSDASettings->mRenderHeight, format.depthTexture());
 	// shader
 	mUseShader = true;
 	mGlsl = gl::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("passthrough.vs")).fragment(loadAsset("post.glsl")));
@@ -245,41 +254,38 @@ void SDAVisualizerApp::draw()
 		}
 	}
 
+	xLeft = 0;
+	xRight = mSDASettings->mRenderWidth;
+	yLeft = 0;
+	yRight = mSDASettings->mRenderHeight;
+	if (mFlipV) {
+		yLeft = yRight;
+		yRight = 0;
+	}
+	if (mFlipH) {
+		xLeft = xRight;
+		xRight = 0;	
+	}
+	Rectf rectangle = Rectf(xLeft, yLeft, xRight, yRight);
 	gl::setMatricesWindow(toPixels(getWindowSize()));
 	mSpoutTexture = mSpoutIn.receiveTexture();
 	if (mSpoutTexture) {
-		// use the scene we rendered into the FBO as a texture
-		//tex->bind();
-
-		int xLeft = 0;
-		int xRight = getWindowWidth();
-		int yLeft = 0;
-		int yRight = getWindowHeight();
-		if (mFlipV) {
-			yLeft = yRight;
-			yRight = 0;
-		}
-		if (mFlipH) {
-			xLeft = xRight;
-			xRight = 0;	
-		}
-		Rectf rectangle = Rectf(xLeft, yLeft, xRight, yRight);
 		// Otherwise draw the texture and fill the screen
 		if (mSDASettings->mCursorVisible) {
 			// original
-			gl::drawString("Original", vec2(toPixels(0), toPixels(140)), Color(1, 1, 1), Font("Verdana", toPixels(16)));
-			gl::draw(mSpoutTexture, Rectf(0, 0, 128, 128));
+			gl::draw(mSpoutTexture, Rectf(0, 0, tWidth, tHeight));
+			gl::drawString("Original", vec2(toPixels(0), toPixels(tHeight)), Color(1, 1, 1), Font("Verdana", toPixels(16)));
 			// flipH
-			gl::drawString("FlipH", vec2(toPixels(128), toPixels(140)), Color(1, 1, 1), Font("Verdana", toPixels(16)));
-			gl::draw(mSpoutTexture, Rectf(256, 0, 128, 128));
+			gl::draw(mSpoutTexture, Rectf(tWidth * 2 + margin, 0, tWidth + margin, tHeight));
+			gl::drawString("FlipH", vec2(toPixels(tWidth + margin), toPixels(tHeight)), Color(1, 1, 1), Font("Verdana", toPixels(16)));
 			// flipV
-			gl::drawString("FlipV", vec2(toPixels(256), toPixels(140)), Color(1, 1, 1), Font("Verdana", toPixels(16)));
-			gl::draw(mSpoutTexture, Rectf(256, 128, 384, 0));
+			gl::draw(mSpoutTexture, Rectf(0, tHeight * 2 + margin, tWidth, tHeight + margin));
+			gl::drawString("FlipV", vec2(toPixels(0), toPixels(tHeight * 2  + margin)), Color(1, 1, 1), Font("Verdana", toPixels(16)));
 
 			if (mUseShader) {
-				gl::drawString("Shader", vec2(toPixels(384), toPixels(140)), Color(1, 1, 1), Font("Verdana", toPixels(16)));
 				// show the FBO color texture 
-				gl::draw(mFbo->getColorTexture(), Rectf(384, 0, 512, 128));
+				gl::draw(mFbo->getColorTexture(), Rectf(tWidth + margin, tHeight + margin, tWidth * 2 + margin, tHeight * 2 + margin));
+				gl::drawString("Shader", vec2(toPixels(tWidth + margin), toPixels(tHeight * 2 + margin)), Color(1, 1, 1), Font("Verdana", toPixels(16)));
 			
 			}
 			// Show the user what it is receiving
@@ -299,11 +305,13 @@ void SDAVisualizerApp::draw()
 		}
 	}
 	else {
-		/*if (mSDASettings->mCursorVisible) {
+		if (mSDASettings->mCursorVisible) {
 			gl::ScopedBlendAlpha alpha;
 			gl::enableAlphaBlending();
 			gl::drawString("No sender/texture detected", vec2(toPixels(20), toPixels(20)), Color(1, 1, 1), Font("Verdana", toPixels(24)));
-		}*/
+			gl::drawString("yLeft: " + std::to_string(yLeft), vec2(getWindowWidth() - toPixels(100), getWindowHeight() - toPixels(30)), Color(1, 1, 1), Font("Verdana", toPixels(24)));
+
+		}
 	}
 	getWindow()->setTitle(mSDASettings->sFps + " fps SDAViz");
 }
