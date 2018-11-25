@@ -11,6 +11,8 @@
 #include "SDALog.h"
 // Spout
 #include "CiSpoutIn.h"
+// ndi
+#include "CinderNDISender.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -57,11 +59,14 @@ private:
 	//! shaders
 	gl::GlslProgRef					mGlsl;
 	bool							mUseShader;
-
+	// ndi
+	CinderNDISender					mNDISender;
+	ci::SurfaceRef 					mSurface;
 };
 
 
 SDAVisualizerApp::SDAVisualizerApp()
+	: mNDISender("SDAVisualizer")
 {
 	// Settings
 	mSDASettings = SDASettings::create();
@@ -85,6 +90,9 @@ SDAVisualizerApp::SDAVisualizerApp()
 	gl::Fbo::Format format;
 	//format.setSamples( 4 ); // uncomment this to enable 4x antialiasing
 	mFbo = gl::Fbo::create(mSDASettings->mRenderWidth, mSDASettings->mRenderHeight, format.depthTexture());
+	// ndi
+	mSurface = ci::Surface::create(mSDASettings->mRenderWidth, mSDASettings->mRenderHeight, true, SurfaceChannelOrder::BGRA);
+
 	// shader
 	mUseShader = true;
 	mGlsl = gl::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("passthrough.vs")).fragment(loadAsset("post.glsl")));
@@ -128,7 +136,7 @@ void SDAVisualizerApp::renderToFbo()
 		gl::ScopedGlslProg prog(mGlsl);
 
 		mGlsl->uniform("iGlobalTime", (float)getElapsedSeconds());
-		mGlsl->uniform("iResolution", vec3(getWindowWidth(), getWindowHeight(), 1.0));
+		mGlsl->uniform("iResolution", vec3(mSDASettings->mRenderWidth, mSDASettings->mRenderHeight, 1.0));
 		mGlsl->uniform("iChannel0", 0); // texture 0
 		mGlsl->uniform("iExposure", 1.0f);
 		mGlsl->uniform("iSobel", 1.0f);
@@ -301,8 +309,20 @@ void SDAVisualizerApp::draw()
 			}
 			else {
 				gl::draw(mSpoutTexture, rectangle);
+				
 			}
 		}
+		// NDI
+		if (mUseShader) {
+			mSurface = Surface::create(mFbo->getColorTexture()->createSource());
+		}
+		else {
+			mSurface = Surface::create(mSpoutTexture->createSource());
+		}
+		long long timecode = getElapsedFrames();
+		XmlTree msg{ "ci_meta", mSDASettings->sFps + " fps SDAViz" };
+		mNDISender.sendMetadata(msg, timecode);
+		mNDISender.sendSurface(*mSurface, timecode);
 	}
 	else {
 		if (mSDASettings->mCursorVisible) {
@@ -313,6 +333,7 @@ void SDAVisualizerApp::draw()
 
 		}
 	}
+	
 	getWindow()->setTitle(mSDASettings->sFps + " fps SDAViz");
 }
 
