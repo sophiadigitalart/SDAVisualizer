@@ -82,9 +82,14 @@ SDAVisualizerApp::SDAVisualizerApp()
 
 	gl::enableDepthRead();
 	gl::enableDepthWrite();
-	//mRenderWindowTimer = 0.0f;
-	//timeline().apply(&mRenderWindowTimer, 1.0f, 2.0f).finishFn([&] { positionRenderWindow(); });
-	//positionRenderWindow();
+#ifdef _DEBUG
+	
+#else
+	mRenderWindowTimer = 0.0f;
+	timeline().apply(&mRenderWindowTimer, 1.0f, 2.0f).finishFn([&] { positionRenderWindow(); });
+	positionRenderWindow();
+
+#endif  // _DEBUG
 }
 void SDAVisualizerApp::positionRenderWindow() {
 	setUIVisibility(mSDASettings->mCursorVisible);
