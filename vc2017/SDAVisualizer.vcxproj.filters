@@ -54,6 +54,12 @@
     <Filter Include="debug">
       <UniqueIdentifier>{dff65134-0c27-480e-8de1-04d7512f75a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Blocks\OSC">
+      <UniqueIdentifier>{18ad2c0f-dd7e-4786-973f-6d8536065c2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="release">
+      <UniqueIdentifier>{0650171a-db21-43c8-8888-94214034fd9a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\SDAVisualizerApp.cpp">
@@ -206,10 +212,16 @@
     <ClInclude Include="..\..\..\Cinder\blocks\Cinder-WebSocketPP\src\WebSocketServer.h">
       <Filter>Blocks\Cinder-WebSocketPP\src</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\..\Cinder\blocks\OSC\src\cinder\osc\Osc.cpp">
+      <Filter>Blocks\OSC</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Cinder\blocks\OSC\src\cinder\osc\Osc.h">
+      <Filter>Blocks\OSC</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -218,7 +230,10 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="x64\Debug\SDASettings.xml">
+    <Xml Include="x64\Release\SDAVisualizer.xml">
+      <Filter>release</Filter>
+    </Xml>
+    <Xml Include="x64\Debug\SDAVisualizer.xml">
       <Filter>debug</Filter>
     </Xml>
   </ItemGroup>

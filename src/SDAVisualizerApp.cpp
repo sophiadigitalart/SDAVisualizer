@@ -69,7 +69,7 @@ SDAVisualizerApp::SDAVisualizerApp()
 	: mNDISender("SDAVisualizer")
 {
 	// Settings
-	mSDASettings = SDASettings::create();
+	mSDASettings = SDASettings::create("Visualizer");
 	// Session
 	mSDASession = SDASession::create(mSDASettings);
 	mSDASession->getWindowsResolution();
@@ -340,6 +340,7 @@ void SDAVisualizerApp::draw()
 void prepareSettings(App::Settings *settings)
 {
 	settings->setWindowSize(640, 480);
+	settings->setConsoleWindowEnabled();
 }
 
 CINDER_APP(SDAVisualizerApp, RendererGl, prepareSettings)
