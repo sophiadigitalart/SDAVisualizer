@@ -94,7 +94,7 @@ SDAVisualizerApp::SDAVisualizerApp()
 	mSurface = ci::Surface::create(mSDASettings->mRenderWidth, mSDASettings->mRenderHeight, true, SurfaceChannelOrder::BGRA);
 
 	// shader
-	mUseShader = true;
+	mUseShader = false;
 	mGlsl = gl::GlslProg::create(gl::GlslProg::Format().vertex(loadAsset("passthrough.vs")).fragment(loadAsset("post.glsl")));
 
 	gl::enableDepthRead();
@@ -215,10 +215,18 @@ void SDAVisualizerApp::mouseUp(MouseEvent event)
 
 void SDAVisualizerApp::keyDown(KeyEvent event)
 {
+#if defined( CINDER_COCOA )
+	bool isModDown = event.isMetaDown();
+#else // windows
+	bool isModDown = event.isControlDown();
+#endif
+	bool isShiftDown = event.isShiftDown();
+
+	CI_LOG_V("main keydown: " + toString(event.getCode()) + " ctrl: " + toString(isModDown) + " shift: " + toString(isShiftDown));
+
 	//if (!mSDASession->handleKeyDown(event)) {
 		switch (event.getCode()) {
 		case KeyEvent::KEY_KP_PLUS:
-		case KeyEvent::KEY_DOLLAR:
 		case KeyEvent::KEY_TAB:
 		case KeyEvent::KEY_f:
 			positionRenderWindow();
@@ -232,11 +240,14 @@ void SDAVisualizerApp::keyDown(KeyEvent event)
 		case KeyEvent::KEY_h:
 			mFlipH = !mFlipH;
 			break;
-
-		case KeyEvent::KEY_ESCAPE:
+		case KeyEvent::KEY_w:
+			CI_LOG_V("wsConnect");
+			if (isModDown) mSDASession->wsConnect();
+			break;
+		/* case KeyEvent::KEY_ESCAPE:
 			// quit the application
 			quit();
-			break;
+			break; */
 		case KeyEvent::KEY_c:
 			// mouse cursor and ui visibility
 			mSDASettings->mCursorVisible = !mSDASettings->mCursorVisible;
@@ -339,7 +350,7 @@ void SDAVisualizerApp::draw()
 
 void prepareSettings(App::Settings *settings)
 {
-	settings->setWindowSize(640, 480);
+	settings->setWindowSize(800, 600);
 	settings->setConsoleWindowEnabled();
 }
 

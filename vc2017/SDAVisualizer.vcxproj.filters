@@ -60,6 +60,9 @@
     <Filter Include="release">
       <UniqueIdentifier>{0650171a-db21-43c8-8888-94214034fd9a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="assets">
+      <UniqueIdentifier>{d437c13b-7198-41ff-a96d-0d4fddf740f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\SDAVisualizerApp.cpp">
@@ -236,5 +239,10 @@
     <Xml Include="x64\Debug\SDAVisualizer.xml">
       <Filter>debug</Filter>
     </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\assets\post.glsl">
+      <Filter>assets</Filter>
+    </None>
   </ItemGroup>
 </Project>
