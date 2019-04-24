@@ -49,8 +49,7 @@ private:
 	Anim<float>						mRenderWindowTimer;
 	void							positionRenderWindow();
 	bool							mFadeInDelay;
-	bool							mFlipV;
-	bool							mFlipH;
+
 	int								xLeft, xRight, yLeft, yRight;
 	int								margin, tWidth, tHeight;
 	//! fbos
@@ -75,8 +74,7 @@ SDAVisualizerApp::SDAVisualizerApp()
 	mSDASession->getWindowsResolution();
 
 	mFadeInDelay = true;
-	mFlipV = false;
-	mFlipH = true;
+
 	xLeft = 0;
 	xRight = mSDASettings->mRenderWidth;
 	yLeft = 0;
@@ -224,7 +222,7 @@ void SDAVisualizerApp::keyDown(KeyEvent event)
 
 	CI_LOG_V("main keydown: " + toString(event.getCode()) + " ctrl: " + toString(isModDown) + " shift: " + toString(isShiftDown));
 
-	//if (!mSDASession->handleKeyDown(event)) {
+	if (!mSDASession->handleKeyDown(event)) {
 		switch (event.getCode()) {
 		case KeyEvent::KEY_KP_PLUS:
 		case KeyEvent::KEY_TAB:
@@ -234,27 +232,15 @@ void SDAVisualizerApp::keyDown(KeyEvent event)
 		case KeyEvent::KEY_s:
 			mUseShader = !mUseShader;
 			break;
-		case KeyEvent::KEY_v:
-			mFlipV = !mFlipV;
-			break;
-		case KeyEvent::KEY_h:
-			mFlipH = !mFlipH;
-			break;
-		case KeyEvent::KEY_w:
-			CI_LOG_V("wsConnect");
-			if (isModDown) mSDASession->wsConnect();
-			break;
-		/* case KeyEvent::KEY_ESCAPE:
-			// quit the application
-			quit();
-			break; */
+
+
 		case KeyEvent::KEY_c:
 			// mouse cursor and ui visibility
 			mSDASettings->mCursorVisible = !mSDASettings->mCursorVisible;
 			setUIVisibility(mSDASettings->mCursorVisible);
 			break;
 		}
-	//}
+	}
 }
 void SDAVisualizerApp::keyUp(KeyEvent event)
 {
@@ -277,11 +263,11 @@ void SDAVisualizerApp::draw()
 	xRight = mSDASettings->mRenderWidth;
 	yLeft = 0;
 	yRight = mSDASettings->mRenderHeight;
-	if (mFlipV) {
+	if (mSDASettings->mFlipV) {
 		yLeft = yRight;
 		yRight = 0;
 	}
-	if (mFlipH) {
+	if (mSDASettings->mFlipH) {
 		xLeft = xRight;
 		xRight = 0;	
 	}
