@@ -225,7 +225,7 @@ void SDAVisualizerApp::keyDown(KeyEvent event)
 	if (!mSDASession->handleKeyDown(event)) {
 		switch (event.getCode()) {
 		case KeyEvent::KEY_KP_PLUS:
-		case KeyEvent::KEY_TAB:
+
 		case KeyEvent::KEY_f:
 			positionRenderWindow();
 			break;
