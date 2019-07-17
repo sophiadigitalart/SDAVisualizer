@@ -36,13 +36,13 @@
     <Filter Include="Blocks\Cinder-NDI\include">
       <UniqueIdentifier>{56213E0A-8FDD-48E8-98AE-C0D25022CF02}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Blocks\Cinder-SDA">
+    <Filter Include="Blocks\Cinder-VD">
       <UniqueIdentifier>{8B3B9098-3ECB-4799-A38E-514472AB1CB1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Blocks\Cinder-SDA\include">
+    <Filter Include="Blocks\Cinder-VD\include">
       <UniqueIdentifier>{56C6BB24-2028-403A-8579-72731C8ABFB5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Blocks\Cinder-SDA\src">
+    <Filter Include="Blocks\Cinder-VD\src">
       <UniqueIdentifier>{680D7CCC-572E-427D-95C8-D020F9AA2586}</UniqueIdentifier>
     </Filter>
     <Filter Include="Blocks\Cinder-WebSocketPP">
@@ -65,13 +65,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\SDAVisualizerApp.cpp">
+    <ClCompile Include="..\src\VDVisualizerApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClInclude Include="..\include\Resources.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClCompile Include="..\src\SDAVisualizerApp.cpp">
+    <ClCompile Include="..\src\VDVisualizerApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClInclude Include="..\..\..\Cinder\blocks\Cinder-MIDI2\include\MidiConstants.h">
@@ -128,74 +128,74 @@
     <ClInclude Include="..\..\..\Cinder\blocks\Cinder-NDI\include\CinderNDISender.h">
       <Filter>Blocks\Cinder-NDI\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-SDA\include\LiveParam.h">
-      <Filter>Blocks\Cinder-SDA\include</Filter>
+    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-VD\include\LiveParam.h">
+      <Filter>Blocks\Cinder-VD\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-SDA\include\SDAAnimation.h">
-      <Filter>Blocks\Cinder-SDA\include</Filter>
+    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-VD\include\VDAnimation.h">
+      <Filter>Blocks\Cinder-VD\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-SDA\include\SDAFbo.h">
-      <Filter>Blocks\Cinder-SDA\include</Filter>
+    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-VD\include\VDFbo.h">
+      <Filter>Blocks\Cinder-VD\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-SDA\include\SDALog.h">
-      <Filter>Blocks\Cinder-SDA\include</Filter>
+    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-VD\include\VDLog.h">
+      <Filter>Blocks\Cinder-VD\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-SDA\include\SDARouter.h">
-      <Filter>Blocks\Cinder-SDA\include</Filter>
+    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-VD\include\VDRouter.h">
+      <Filter>Blocks\Cinder-VD\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-SDA\include\SDASession.h">
-      <Filter>Blocks\Cinder-SDA\include</Filter>
+    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-VD\include\VDSession.h">
+      <Filter>Blocks\Cinder-VD\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-SDA\include\SDASettings.h">
-      <Filter>Blocks\Cinder-SDA\include</Filter>
+    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-VD\include\VDSettings.h">
+      <Filter>Blocks\Cinder-VD\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-SDA\include\SDAShader.h">
-      <Filter>Blocks\Cinder-SDA\include</Filter>
+    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-VD\include\VDShader.h">
+      <Filter>Blocks\Cinder-VD\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-SDA\include\SDATexture.h">
-      <Filter>Blocks\Cinder-SDA\include</Filter>
+    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-VD\include\VDTexture.h">
+      <Filter>Blocks\Cinder-VD\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-SDA\include\SDAUtils.h">
-      <Filter>Blocks\Cinder-SDA\include</Filter>
+    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-VD\include\VDUtils.h">
+      <Filter>Blocks\Cinder-VD\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-SDA\include\SDAWebsocket.h">
-      <Filter>Blocks\Cinder-SDA\include</Filter>
+    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-VD\include\VDWebsocket.h">
+      <Filter>Blocks\Cinder-VD\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-SDA\include\Watchdog.h">
-      <Filter>Blocks\Cinder-SDA\include</Filter>
+    <ClInclude Include="..\..\..\Cinder\blocks\Cinder-VD\include\Watchdog.h">
+      <Filter>Blocks\Cinder-VD\include</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-SDA\src\LiveParam.cpp">
-      <Filter>Blocks\Cinder-SDA\src</Filter>
+    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-VD\src\LiveParam.cpp">
+      <Filter>Blocks\Cinder-VD\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-SDA\src\SDAAnimation.cpp">
-      <Filter>Blocks\Cinder-SDA\src</Filter>
+    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-VD\src\VDAnimation.cpp">
+      <Filter>Blocks\Cinder-VD\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-SDA\src\SDAFbo.cpp">
-      <Filter>Blocks\Cinder-SDA\src</Filter>
+    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-VD\src\VDFbo.cpp">
+      <Filter>Blocks\Cinder-VD\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-SDA\src\SDALog.cpp">
-      <Filter>Blocks\Cinder-SDA\src</Filter>
+    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-VD\src\VDLog.cpp">
+      <Filter>Blocks\Cinder-VD\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-SDA\src\SDARouter.cpp">
-      <Filter>Blocks\Cinder-SDA\src</Filter>
+    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-VD\src\VDRouter.cpp">
+      <Filter>Blocks\Cinder-VD\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-SDA\src\SDASession.cpp">
-      <Filter>Blocks\Cinder-SDA\src</Filter>
+    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-VD\src\VDSession.cpp">
+      <Filter>Blocks\Cinder-VD\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-SDA\src\SDASettings.cpp">
-      <Filter>Blocks\Cinder-SDA\src</Filter>
+    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-VD\src\VDSettings.cpp">
+      <Filter>Blocks\Cinder-VD\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-SDA\src\SDAShader.cpp">
-      <Filter>Blocks\Cinder-SDA\src</Filter>
+    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-VD\src\VDShader.cpp">
+      <Filter>Blocks\Cinder-VD\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-SDA\src\SDATexture.cpp">
-      <Filter>Blocks\Cinder-SDA\src</Filter>
+    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-VD\src\VDTexture.cpp">
+      <Filter>Blocks\Cinder-VD\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-SDA\src\SDAUtils.cpp">
-      <Filter>Blocks\Cinder-SDA\src</Filter>
+    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-VD\src\VDUtils.cpp">
+      <Filter>Blocks\Cinder-VD\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-SDA\src\SDAWebsocket.cpp">
-      <Filter>Blocks\Cinder-SDA\src</Filter>
+    <ClCompile Include="..\..\..\Cinder\blocks\Cinder-VD\src\VDWebsocket.cpp">
+      <Filter>Blocks\Cinder-VD\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Cinder\blocks\Cinder-WebSocketPP\src\WebSocketClient.cpp">
       <Filter>Blocks\Cinder-WebSocketPP\src</Filter>
@@ -233,10 +233,10 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="x64\Release\SDAVisualizer.xml">
+    <Xml Include="x64\Release\VDVisualizer.xml">
       <Filter>release</Filter>
     </Xml>
-    <Xml Include="x64\Debug\SDAVisualizer.xml">
+    <Xml Include="x64\Debug\VDVisualizer.xml">
       <Filter>debug</Filter>
     </Xml>
   </ItemGroup>

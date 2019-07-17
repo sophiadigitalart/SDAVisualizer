@@ -1,2 +1,2 @@
-# SDAVisualizer
-Cinder vs2017 Spout Receiver app with Cinder-SDA and Cinder-Spout blocks
+# VDVisualizer
+Cinder vs2017 Spout Receiver app with Cinder-VD and Cinder-Spout blocks

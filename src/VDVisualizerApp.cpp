@@ -4,11 +4,11 @@
 #include "cinder/gl/Fbo.h"
 
 // Settings
-#include "SDASettings.h"
+#include "VDSettings.h"
 // Session
-#include "SDASession.h"
+#include "VDSession.h"
 // Log
-#include "SDALog.h"
+#include "VDLog.h"
 // Spout
 #include "CiSpoutIn.h"
 // ndi
@@ -17,12 +17,12 @@
 using namespace ci;
 using namespace ci::app;
 using namespace std;
-using namespace SophiaDigitalArt;
+using namespace VideoDromm;
 
-class SDAVisualizerApp : public App {
+class VDVisualizerApp : public App {
 
 public:
-	SDAVisualizerApp();
+	VDVisualizerApp();
 	void mouseMove(MouseEvent event) override;
 	void mouseDown(MouseEvent event) override;
 	void mouseDrag(MouseEvent event) override;
@@ -36,11 +36,11 @@ public:
 	void setUIVisibility(bool visible);
 private:
 	// Settings
-	SDASettingsRef					mSDASettings;
+	VDSettingsRef					mVDSettings;
 	// Session
-	SDASessionRef					mSDASession;
+	VDSessionRef					mVDSession;
 	// Log
-	SDALogRef						mSDALog;
+	VDLogRef						mVDLog;
 	// Spout
 	SpoutIn							mSpoutIn;
 	gl::Texture2dRef				mSpoutTexture;
@@ -64,32 +64,32 @@ private:
 };
 
 
-SDAVisualizerApp::SDAVisualizerApp()
-	: mNDISender("SDAVisualizer")
+VDVisualizerApp::VDVisualizerApp()
+	: mNDISender("VDVisualizer")
 {
 	// Settings
-	mSDASettings = SDASettings::create("Visualizer");
+	mVDSettings = VDSettings::create("Visualizer");
 	// Session
-	mSDASession = SDASession::create(mSDASettings);
-	mSDASession->getWindowsResolution();
+	mVDSession = VDSession::create(mVDSettings);
+	mVDSession->getWindowsResolution();
 
 	mFadeInDelay = true;
 
 	xLeft = 0;
-	xRight = mSDASettings->mRenderWidth;
+	xRight = mVDSettings->mRenderWidth;
 	yLeft = 0;
-	yRight = mSDASettings->mRenderHeight;
+	yRight = mVDSettings->mRenderHeight;
 	margin = 20;
-	tWidth = mSDASettings->mFboWidth / 2;
-	tHeight = mSDASettings->mFboHeight / 2;
+	tWidth = mVDSettings->mFboWidth / 2;
+	tHeight = mVDSettings->mFboHeight / 2;
 	// windows
 	mIsShutDown = false;
 	// fbo
 	gl::Fbo::Format format;
 	//format.setSamples( 4 ); // uncomment this to enable 4x antialiasing
-	mFbo = gl::Fbo::create(mSDASettings->mRenderWidth, mSDASettings->mRenderHeight, format.depthTexture());
+	mFbo = gl::Fbo::create(mVDSettings->mRenderWidth, mVDSettings->mRenderHeight, format.depthTexture());
 	// ndi
-	mSurface = ci::Surface::create(mSDASettings->mRenderWidth, mSDASettings->mRenderHeight, true, SurfaceChannelOrder::BGRA);
+	mSurface = ci::Surface::create(mVDSettings->mRenderWidth, mVDSettings->mRenderHeight, true, SurfaceChannelOrder::BGRA);
 
 	// shader
 	mUseShader = false;
@@ -106,14 +106,14 @@ SDAVisualizerApp::SDAVisualizerApp()
 
 #endif  // _DEBUG
 }
-void SDAVisualizerApp::positionRenderWindow() {
-	setUIVisibility(mSDASettings->mCursorVisible);
-	mSDASettings->mRenderPosXY = ivec2(mSDASettings->mRenderX, mSDASettings->mRenderY);//20141214 was 0
-	setWindowPos(mSDASettings->mRenderX, mSDASettings->mRenderY);
-	setWindowSize(mSDASettings->mRenderWidth, mSDASettings->mRenderHeight);
+void VDVisualizerApp::positionRenderWindow() {
+	setUIVisibility(mVDSettings->mCursorVisible);
+	mVDSettings->mRenderPosXY = ivec2(mVDSettings->mRenderX, mVDSettings->mRenderY);//20141214 was 0
+	setWindowPos(mVDSettings->mRenderX, mVDSettings->mRenderY);
+	setWindowSize(mVDSettings->mRenderWidth, mVDSettings->mRenderHeight);
 }
 // Render into the FBO
-void SDAVisualizerApp::renderToFbo()
+void VDVisualizerApp::renderToFbo()
 {
 	if (mSpoutTexture) {
 		// this will restore the old framebuffer binding when we leave this function
@@ -134,7 +134,7 @@ void SDAVisualizerApp::renderToFbo()
 		gl::ScopedGlslProg prog(mGlsl);
 
 		mGlsl->uniform("iGlobalTime", (float)getElapsedSeconds());
-		mGlsl->uniform("iResolution", vec3(mSDASettings->mRenderWidth, mSDASettings->mRenderHeight, 1.0));
+		mGlsl->uniform("iResolution", vec3(mVDSettings->mRenderWidth, mVDSettings->mRenderHeight, 1.0));
 		mGlsl->uniform("iChannel0", 0); // texture 0
 		mGlsl->uniform("iExposure", 1.0f);
 		mGlsl->uniform("iSobel", 1.0f);
@@ -143,7 +143,7 @@ void SDAVisualizerApp::renderToFbo()
 		gl::drawSolidRect(getWindowBounds());
 	}
 }
-void SDAVisualizerApp::setUIVisibility(bool visible)
+void VDVisualizerApp::setUIVisibility(bool visible)
 {
 	if (visible)
 	{
@@ -154,42 +154,42 @@ void SDAVisualizerApp::setUIVisibility(bool visible)
 		hideCursor();
 	}
 }
-void SDAVisualizerApp::fileDrop(FileDropEvent event)
+void VDVisualizerApp::fileDrop(FileDropEvent event)
 {
-	mSDASession->fileDrop(event);
+	mVDSession->fileDrop(event);
 }
-void SDAVisualizerApp::update()
+void VDVisualizerApp::update()
 {
 	if (mFadeInDelay == false) {
-		mSDASession->setFloatUniformValueByIndex(mSDASettings->IFPS, getAverageFps());
-		mSDASession->update();
+		mVDSession->setFloatUniformValueByIndex(mVDSettings->IFPS, getAverageFps());
+		mVDSession->update();
 		// render into our FBO
 		if (mUseShader) {
 			renderToFbo();
 		}
 	}
 }
-void SDAVisualizerApp::cleanup()
+void VDVisualizerApp::cleanup()
 {
 	if (!mIsShutDown)
 	{
 		mIsShutDown = true;
 		CI_LOG_V("shutdown");
 		// save settings
-		mSDASettings->save();
-		mSDASession->save();
+		mVDSettings->save();
+		mVDSession->save();
 		quit();
 	}
 }
-void SDAVisualizerApp::mouseMove(MouseEvent event)
+void VDVisualizerApp::mouseMove(MouseEvent event)
 {
-	if (!mSDASession->handleMouseMove(event)) {
+	if (!mVDSession->handleMouseMove(event)) {
 		// let your application perform its mouseMove handling here
 	}
 }
-void SDAVisualizerApp::mouseDown(MouseEvent event)
+void VDVisualizerApp::mouseDown(MouseEvent event)
 {
-	if (!mSDASession->handleMouseDown(event)) {
+	if (!mVDSession->handleMouseDown(event)) {
 		// let your application perform its mouseDown handling here
 		if (event.isRightDown()) { 
 			// Select a sender
@@ -198,20 +198,20 @@ void SDAVisualizerApp::mouseDown(MouseEvent event)
 		}
 	}
 }
-void SDAVisualizerApp::mouseDrag(MouseEvent event)
+void VDVisualizerApp::mouseDrag(MouseEvent event)
 {
-	if (!mSDASession->handleMouseDrag(event)) {
+	if (!mVDSession->handleMouseDrag(event)) {
 		// let your application perform its mouseDrag handling here
 	}	
 }
-void SDAVisualizerApp::mouseUp(MouseEvent event)
+void VDVisualizerApp::mouseUp(MouseEvent event)
 {
-	if (!mSDASession->handleMouseUp(event)) {
+	if (!mVDSession->handleMouseUp(event)) {
 		// let your application perform its mouseUp handling here
 	}
 }
 
-void SDAVisualizerApp::keyDown(KeyEvent event)
+void VDVisualizerApp::keyDown(KeyEvent event)
 {
 #if defined( CINDER_COCOA )
 	bool isModDown = event.isMetaDown();
@@ -222,7 +222,7 @@ void SDAVisualizerApp::keyDown(KeyEvent event)
 
 	CI_LOG_V("main keydown: " + toString(event.getCode()) + " ctrl: " + toString(isModDown) + " shift: " + toString(isShiftDown));
 
-	if (!mSDASession->handleKeyDown(event)) {
+	if (!mVDSession->handleKeyDown(event)) {
 		switch (event.getCode()) {
 		case KeyEvent::KEY_KP_PLUS:
 
@@ -236,38 +236,38 @@ void SDAVisualizerApp::keyDown(KeyEvent event)
 
 		case KeyEvent::KEY_c:
 			// mouse cursor and ui visibility
-			mSDASettings->mCursorVisible = !mSDASettings->mCursorVisible;
-			setUIVisibility(mSDASettings->mCursorVisible);
+			mVDSettings->mCursorVisible = !mVDSettings->mCursorVisible;
+			setUIVisibility(mVDSettings->mCursorVisible);
 			break;
 		}
 	}
 }
-void SDAVisualizerApp::keyUp(KeyEvent event)
+void VDVisualizerApp::keyUp(KeyEvent event)
 {
-	if (!mSDASession->handleKeyUp(event)) {
+	if (!mVDSession->handleKeyUp(event)) {
 	}
 }
 
-void SDAVisualizerApp::draw()
+void VDVisualizerApp::draw()
 {
 	gl::clear(Color::black());
 	if (mFadeInDelay) {
-		mSDASettings->iAlpha = 0.0f;
-		if (getElapsedFrames() > mSDASession->getFadeInDelay()) {
+		mVDSettings->iAlpha = 0.0f;
+		if (getElapsedFrames() > mVDSession->getFadeInDelay()) {
 			mFadeInDelay = false;
-			timeline().apply(&mSDASettings->iAlpha, 0.0f, 1.0f, 1.5f, EaseInCubic());
+			timeline().apply(&mVDSettings->iAlpha, 0.0f, 1.0f, 1.5f, EaseInCubic());
 		}
 	}
 
 	xLeft = 0;
-	xRight = mSDASettings->mRenderWidth;
+	xRight = mVDSettings->mRenderWidth;
 	yLeft = 0;
-	yRight = mSDASettings->mRenderHeight;
-	if (mSDASettings->mFlipV) {
+	yRight = mVDSettings->mRenderHeight;
+	if (mVDSettings->mFlipV) {
 		yLeft = yRight;
 		yRight = 0;
 	}
-	if (mSDASettings->mFlipH) {
+	if (mVDSettings->mFlipH) {
 		xLeft = xRight;
 		xRight = 0;	
 	}
@@ -276,7 +276,7 @@ void SDAVisualizerApp::draw()
 	mSpoutTexture = mSpoutIn.receiveTexture();
 	if (mSpoutTexture) {
 		// Otherwise draw the texture and fill the screen
-		if (mSDASettings->mCursorVisible) {
+		if (mVDSettings->mCursorVisible) {
 			// original
 			gl::draw(mSpoutTexture, Rectf(0, 0, tWidth, tHeight));
 			gl::drawString("Original", vec2(toPixels(0), toPixels(tHeight)), Color(1, 1, 1), Font("Verdana", toPixels(16)));
@@ -317,12 +317,12 @@ void SDAVisualizerApp::draw()
 			mSurface = Surface::create(mSpoutTexture->createSource());
 		}
 		long long timecode = getElapsedFrames();
-		XmlTree msg{ "ci_meta", mSDASettings->sFps + " fps SDAViz" };
+		XmlTree msg{ "ci_meta", mVDSettings->sFps + " fps VDViz" };
 		mNDISender.sendMetadata(msg, timecode);
 		mNDISender.sendSurface(*mSurface, timecode);
 	}
 	else {
-		if (mSDASettings->mCursorVisible) {
+		if (mVDSettings->mCursorVisible) {
 			gl::ScopedBlendAlpha alpha;
 			gl::enableAlphaBlending();
 			gl::drawString("No sender/texture detected", vec2(toPixels(20), toPixels(20)), Color(1, 1, 1), Font("Verdana", toPixels(24)));
@@ -331,7 +331,7 @@ void SDAVisualizerApp::draw()
 		}
 	}
 	
-	getWindow()->setTitle(mSDASettings->sFps + " fps SDAViz");
+	getWindow()->setTitle(mVDSettings->sFps + " fps VDViz");
 }
 
 void prepareSettings(App::Settings *settings)
@@ -340,4 +340,4 @@ void prepareSettings(App::Settings *settings)
 	settings->setConsoleWindowEnabled();
 }
 
-CINDER_APP(SDAVisualizerApp, RendererGl, prepareSettings)
+CINDER_APP(VDVisualizerApp, RendererGl, prepareSettings)
