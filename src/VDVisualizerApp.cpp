@@ -17,7 +17,7 @@
 using namespace ci;
 using namespace ci::app;
 using namespace std;
-using namespace VideoDromm;
+using namespace videodromm;
 
 class VDVisualizerApp : public App {
 
@@ -33,7 +33,7 @@ public:
 	void update() override;
 	void draw() override;
 	void cleanup() override;
-	void setUIVisibility(bool visible);
+	void toggleCursorVisibility(bool visible);
 private:
 	// Settings
 	VDSettingsRef					mVDSettings;
@@ -107,7 +107,7 @@ VDVisualizerApp::VDVisualizerApp()
 #endif  // _DEBUG
 }
 void VDVisualizerApp::positionRenderWindow() {
-	setUIVisibility(mVDSettings->mCursorVisible);
+	toggleCursorVisibility(mVDSettings->mCursorVisible);
 	mVDSettings->mRenderPosXY = ivec2(mVDSettings->mRenderX, mVDSettings->mRenderY);//20141214 was 0
 	setWindowPos(mVDSettings->mRenderX, mVDSettings->mRenderY);
 	setWindowSize(mVDSettings->mRenderWidth, mVDSettings->mRenderHeight);
@@ -143,7 +143,7 @@ void VDVisualizerApp::renderToFbo()
 		gl::drawSolidRect(getWindowBounds());
 	}
 }
-void VDVisualizerApp::setUIVisibility(bool visible)
+void VDVisualizerApp::toggleCursorVisibility(bool visible)
 {
 	if (visible)
 	{
@@ -225,8 +225,7 @@ void VDVisualizerApp::keyDown(KeyEvent event)
 	if (!mVDSession->handleKeyDown(event)) {
 		switch (event.getCode()) {
 		case KeyEvent::KEY_KP_PLUS:
-
-		case KeyEvent::KEY_f:
+		case KeyEvent::KEY_F11:
 			positionRenderWindow();
 			break;
 		case KeyEvent::KEY_s:
@@ -237,7 +236,7 @@ void VDVisualizerApp::keyDown(KeyEvent event)
 		case KeyEvent::KEY_c:
 			// mouse cursor and ui visibility
 			mVDSettings->mCursorVisible = !mVDSettings->mCursorVisible;
-			setUIVisibility(mVDSettings->mCursorVisible);
+			toggleCursorVisibility(mVDSettings->mCursorVisible);
 			break;
 		}
 	}
